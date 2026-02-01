@@ -1,0 +1,363 @@
+/* ===============================
+   SIDEBAR BASE STYLES
+================================ */
+.dashboard-sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-right: 2px solid rgba(0, 0, 0, 0.06);
+    z-index: 1000;
+    transition: width 0.3s ease; /* Smooth transition when resizing */
+}
+
+.sidebar-header {
+    height: 76px;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+    transition: padding 0.3s ease;
+}
+
+.sidebar-logo {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    flex-grow: 1; /* Pushes logout to bottom */
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #0f172a;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.25s ease;
+    white-space: nowrap; /* Prevents text from wrapping before it hides */
+}
+
+.sidebar-menu a i {
+    font-size: 18px;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Hover & Active States */
+.sidebar-menu a:hover { background: rgba(99, 102, 241, 0.08); }
+.sidebar-menu a.active {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.18), rgba(56, 189, 248, 0.18));
+    font-weight: 600;
+}
+
+/* Logout Specific */
+.sidebar-menu a.logout { color: #dc2626; margin-top: auto; }
+.sidebar-menu a.logout i { -webkit-text-fill-color: #dc2626; }
+
+/* Footer */
+.sidebar-footer {
+    padding: 16px;
+    border-top: 2px solid rgba(0, 0, 0, 0.06);
+    font-size: 12px;
+    color: #475569;
+}
+
+/* ===============================
+   RESPONSIVE (COLLAPSED) STATE
+================================ */
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        width: 80px; /* Shorter width */
+    }
+
+    /* Hide text labels and footer */
+    .sidebar-menu a span, 
+    .sidebar-logo span,
+    .sidebar-footer {
+        display: none;
+    }
+
+    /* Center elements */
+    .sidebar-header,
+    .sidebar-menu a {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .sidebar-menu a i {
+        margin: 0;
+        font-size: 20px;
+    }
+}
+/* ===============================
+    RESPONSIVE SIDEBAR (MOBILE)
+================================ */
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        width: 80px; /* Narrower width for icons only */
+    }
+
+    /* Hide text labels in the menu */
+    .sidebar-menu a span, 
+    .sidebar-logo span,
+    .sidebar-footer {
+        display: none; 
+    }
+
+    /* Adjust header padding and center the logo/icon */
+    .sidebar-header {
+        padding: 0;
+        justify-content: center;
+    }
+
+    /* Center the menu icons */
+    .sidebar-menu a {
+        justify-content: center;
+        padding: 12px 0;
+    }
+
+    .sidebar-menu a i {
+        font-size: 20px; /* Slightly larger icons for better touch targets */
+        margin: 0;
+    }
+
+    /* Adjust main content margin (If you are using one) */
+    /* .main-content { margin-left: 80px !important; } */
+}
+/* ===============================
+   DASHBOARD MAIN
+================================ */
+.dashboard-main {
+    margin-left: 24px;       /* same as sidebar width */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f8fafc;
+    transition: margin-left 0.2s ease;
+  }
+
+/* DASHBOARD HEADER - NOW MATCHES SIDEBAR */
+.dashboard-header {
+    width: 100vw;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    padding: 0 260px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(14px);
+    position: fixed;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    z-index: 100; /* Higher than sidebar (1000) and wrapper */
+}
+
+  .dashboard-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+  }
+
+
+/* ==========================================================================
+   BLOG GENERATION PAGE STYLES
+   ========================================================================== */
+
+/* Main Page Wrapper */
+.blog-center-wrapper {
+    min-height: calc(100vh - 76px); /* Matches your dashboard-header height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    text-align: center;
+    margin-left: 260px; /* Matches sidebar width exactly */
+    margin-top: 76px;  /* Matches header height exactly */
+    /* FIX 1: Clip any elements that try to go above the top margin */
+    overflow: hidden; 
+}
+
+/* Floating Background Element */
+.floating-gradient-circle {
+    position: absolute;
+    
+    /* FIX 2: Increase top value so it doesn't touch the header boundary */
+    top: 60px; 
+    
+    /* FIX 3: Since the parent has a margin-left, ensure this remains 
+       centered relative to the content area, not the whole screen */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 220px;
+    height: 220px;
+    z-index: 1; 
+    pointer-events: none;
+    animation: floatCircle 6s ease-in-out infinite;
+}
+
+.floating-gradient-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+/* User Greeting Section */
+/* Adjust the Greeting to account for the pushed-down circle */
+.welcome-user {
+    font-size: 26px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    
+    /* FIX 4: Reduced margin slightly to keep content visible */
+    margin-top: 260px; 
+    z-index: 2;
+    color: #000;
+}
+
+/* Username Gradient Effect */
+.welcome-name {
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Main Thought Heading */
+.blog-thought-heading {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    z-index: 2;
+}
+
+.blog-thought-heading .text-black {
+    color: #000;
+}
+
+.blog-thought-heading .text-gradient {
+    background: linear-gradient(90deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Prompt Box (Search Bar) Container */
+.prompt-box {
+    position: relative;
+    width: 100%;
+    max-width: 720px;
+    margin: 10px auto;
+    z-index: 3;
+}
+
+/* The Textarea Input */
+.prompt-input {
+    width: 100%;
+    min-height: 64px;
+    max-height: 240px;
+    resize: none;
+    padding: 18px 65px 18px 25px; /* Right padding reserved for button */
+    font-size: 16px;
+    line-height: 1.6;
+    border-radius: 35px; /* Pill Shape */
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.prompt-input:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.12);
+}
+
+/* Submit Icon Button */
+.prompt-submit {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%); /* Keeps icon centered regardless of height */
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.prompt-submit i {
+    font-size: 18px;
+}
+
+.prompt-submit:hover {
+    transform: translateY(-52%) scale(1.05); /* Slight lift on hover */
+    box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
+}
+
+/* Loading State Styling */
+#loader {
+    margin-top: 35px;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    width: fit-content;
+}
+
+/* Animations */
+@keyframes floatCircle {
+    0%, 100% {
+        transform: translate(-50%, 0px);
+    }
+    50% {
+        transform: translate(-50%, -25px);
+    }
+}
+
+/* Utility: For mobile responsiveness */
+@media (max-width: 768px) {
+    .blog-thought-heading {
+        font-size: 1.8rem;
+    }
+    .welcome-user {
+        margin-top: 80px;
+    }
+}

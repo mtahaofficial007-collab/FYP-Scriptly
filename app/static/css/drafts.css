@@ -1,0 +1,435 @@
+/* Drafts Content Wrapper */
+.drafts-content-wrapper {
+    padding-left: 260px;
+    padding-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+    width: calc(100% - 20px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 70px;
+  }
+  
+  /* Search + Filter Wrapper */
+  .search-filter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Search Input */
+  .search-input {
+    width: 220px;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid #d1d5db;  
+    border-radius: 12px;           
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: border 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+    background-color: #fff;
+  }
+  
+  .search-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    transform: translateY(-1px);
+  }
+  
+  .search-input::placeholder {
+    color: #9ca3af;
+  }
+  
+  /* Filter Button */
+  .filter-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 12px;  
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  
+  .filter-btn i {
+    font-size: 16px;
+  }
+  
+  .filter-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
+  }
+  
+  /* Drafts List Wrapper */
+  .drafts-list-wrapper {
+    width: 100%;
+    max-width: 900px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: visible;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  /* Header Row */
+  .drafts-header {
+    display: flex;
+    background: #f3f4f6;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+  }
+  
+  .draft-col {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .draft-col.actions {
+    flex: 0.5;
+    text-align: center;
+  }
+  
+  /* Draft Rows */
+  .draft-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #111827;
+    transition: background 0.15s ease;
+  }
+  
+  .draft-row:hover {
+    background: #f9fafb;
+  }
+  
+  /* Status colors with gradient */
+  .draft-col.status.published,
+  .draft-col.status.draft {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 600;
+  }
+  
+  /* Action Buttons */
+  .edit-btn,
+  .delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    font-size: 16px;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  
+  /* Gradient Icons for buttons */
+  .edit-btn i,
+  .delete-btn i {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  
+  .edit-btn:hover i,
+  .delete-btn:hover i {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+  
+  /* No Drafts Placeholder */
+  .no-drafts {
+    text-align: center;
+    padding: 40px 0;
+    color: #9ca3af;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  
+  /* Sort Arrow Icon */
+  .sort-icons {
+    display: inline-flex;
+    margin-left: 2px;
+    font-size: 12px;
+    color: #9ca3af; /* gray for inactive */
+    cursor: pointer;
+    transition: color 0.2s ease, transform 0.15s ease;
+  }
+  
+  .sort-icons i {
+    line-height: 1;
+  }
+  
+  .sort-icons:hover i {
+    color: #6366f1; /* highlight on hover */
+    transform: translateY(-1px);
+  }
+  
+  .draft-row {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.draft-col.title {
+    flex: 3; /* Gives the title more breathing room */
+    font-weight: 500;
+    color: #1a202c;
+}
+
+.draft-col.tags, .draft-col.status {
+    flex: 1.5;
+    color: #4a5568;
+}
+
+.draft-col.actions {
+    flex: 1;
+    text-align: right;
+}
+
+    /* Pagination Styling */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        padding: 20px 0;
+        margin-top: 10px;
+    }
+    .btn-page {
+        padding: 6px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #4a5568;
+        background: white;
+        font-size: 14px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .btn-page:hover {
+        background: #f7fafc;
+        border-color: #cbd5e0;
+        color: #2d3748;
+    }
+    .page-info {
+        font-size: 14px;
+        color: #718096;
+        font-weight: 500;
+    }
+    .view-only-text {
+        color: #9ca3af;
+        font-size: 0.85rem;
+        font-style: italic;
+    }
+/* 1. Fix Alignment: Ensure columns match header width */
+.draft-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 24px;
+    background: #fff;
+    border-bottom: 1px solid #f1f5f9;
+    /* This allows the dropdown to pop out of the row */
+    overflow: visible !important; 
+}
+
+/* 2. Fix the Actions Column */
+.draft-col.actions {
+    flex: 0 0 100px; /* Give it a fixed width */
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    overflow: visible !important;
+}
+
+/* 3. Fix the Hidden Modal/Dropdown */
+.custom-dropdown .dropdown-menu {
+    position: absolute;
+    z-index: 9999 !important; /* Ensure it's above everything */
+    margin-top: 5px;
+    background: white;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    /* This prevents clipping in some browsers */
+    will-change: transform; 
+}
+
+/* 4. Three dots styling to match your theme */
+.action-menu-btn {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.action-menu-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+}
+
+/* --- GLASS DROPDOWN MENU --- */
+.glass-dropdown {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 16px !important;
+    padding: 10px !important;
+    z-index: 9999 !important;
+    min-width: 220px;
+}
+
+/* --- ICON GRADIENTS --- */
+.icon-gradient {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+    margin-right: 12px;
+}
+
+/* --- ITEM STYLING --- */
+.glass-dropdown .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+}
+
+.glass-dropdown .dropdown-item:hover {
+    background: rgba(139, 92, 246, 0.1);
+    transform: translateX(5px);
+}
+
+.glass-dropdown .dropdown-item span {
+    color: #475569;
+}
+
+/* --- DANGER ITEM (DELETE) --- */
+.text-danger-glass {
+    color: #dc2626 !important;
+}
+
+.text-danger-glass i {
+    color: #dc2626;
+    margin-right: 12px;
+}
+
+.text-danger-glass:hover {
+    background: rgba(220, 38, 38, 0.08) !important;
+}
+
+/* --- DIVIDER --- */
+.dropdown-divider-glass {
+    height: 1px;
+    margin: 8px 0;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* --- FIX OVERLAP ON ROW --- */
+.draft-row {
+    overflow: visible !important;
+    position: relative;
+}
+
+.draft-col.actions {
+    overflow: visible !important;
+    position: relative;
+    z-index: 5;
+}
+
+/* --- GLASS DROPDOWN --- */
+.glass-dropdown {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 16px !important;
+    padding: 10px !important;
+    z-index: 9999 !important;
+    min-width: 240px;
+}
+
+/* --- GRADIENT ICONS --- */
+.icon-gradient {
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+    margin-right: 12px;
+}
+
+.icon-gradient-success {
+    background: linear-gradient(135deg, #10b981, #3b82f6); /* Green to Blue */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 18px;
+    margin-right: 12px;
+}
+
+/* --- ITEM STYLING --- */
+.glass-dropdown .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.glass-dropdown .dropdown-item:hover {
+    background: rgba(139, 92, 246, 0.1);
+    transform: translateX(5px);
+}
+
+.text-danger-glass {
+    color: #dc2626 !important;
+}
+
+.text-danger-glass i {
+    margin-right: 12px;
+    font-size: 18px;
+}
+
+.dropdown-divider-glass {
+    height: 1px;
+    margin: 8px 0;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+/* --- OVERLAP FIX --- */
+.draft-row {
+    overflow: visible !important;
+    position: relative;
+}
+
+.draft-col.actions {
+     overflow: visible !important;
+    position: relative;
+    display: flex;
+    justify-content: flex-end; /* Aligns dots to the right */
+    padding-right: 20px;
+}

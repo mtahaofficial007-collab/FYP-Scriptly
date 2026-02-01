@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block title %}Drafts | ScriptlyAI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/drafts.css') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+  .action-menu {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: 0.2s;
+  }
+
+  .action-menu:hover {
+    background: #f0f0f0;
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+
+  .dropdown-item {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dropdown-item.text-danger:hover {
+    background-color: #fff5f5;
+  }
+
+  /* Ensure the action column doesn't clip the menu */
+  .draft-col.actions {
+    overflow: visible !important;
+    position: relative;
+  }
+
+  /* Three dots button styling */
+  .action-menu-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    color: #64748b;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action-menu-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+<nav class="dashboard-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                 <span>Scriptly</span>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            {% set path = request.path %}
+
+            <a href="{{ url_for('blog.home') }}" class="{{ 'active' if path == url_for('blog.home') else '' }}">
+                <i class="bi bi-speedometer2"></i> <span>Home</span>
+            </a>
+            <a href="{{ url_for('blog.create_page') }}" class="{{ 'active' if path == url_for('blog.create_page') else '' }}">
+                <i class="bi bi-plus-circle"></i> <span>Create Blog</span>
+            </a>
+            <a href="{{ url_for('blog.drafts_page') }}" class="{{ 'active' if path == url_for('blog.drafts_page') else '' }}">
+                <i class="bi bi-file-earmark-richtext"></i> <span>My Drafts</span>
+            </a>
+            <a href="{{ url_for('blog.categories_page') }}" class="{{ 'active' if path == url_for('blog.categories_page') else '' }}">
+                <i class="bi bi-tags"></i> <span>Categories</span>
+            </a>
+            <a href="{{ url_for('blog.approval_page') }}" class="{{ 'active' if path == url_for('blog.approval_page') else '' }}">
+                <i class="bi bi-shield-check"></i> <span>Admin Approval</span>
+            </a>
+            <a href="/users" class="{{ 'active' if path == '/users' else '' }}">
+                <i class="bi bi-people-fill"></i> <span>User Management</span>
+            </a>    
+            
+            <a href="{{url_for('auth_bp.logout')}}" class="logout mt-auto">
+                <i class="bi bi-box-arrow-right"></i> <span>Logout</span>
+            </a>
+        </div>
+
+        <div class="sidebar-footer text-center">
+            <span>User ID</span>
+            <small>{{ session.get('user_id', 'N/A') }}</small>
+        </div>
+    </nav>
+
+  <main class="dashboard-main">
+    <header class="dashboard-header">
+      <h1>Drafts</h1>
+    </header>
+
+    <div class="drafts-content-wrapper">
+      <div class="drafts-list-wrapper">
+        <div class="drafts-header">
+          <div class="draft-col title">Title</div>
+          <div class="draft-col tags">Category</div>
+          <div class="draft-col status">Last Updated</div>
+          <div class="draft-col actions">Actions</div>
+        </div>
+
+        {% for draft in drafts %}
+        <div class="draft-row" id="row-{{ draft.id }}">
+          <div class="draft-col title">
+            {{ draft.title.replace('**', '') if draft.title else 'Untitled' }}
+          </div>
+          <div class="draft-col tags">
+            <span class="badge-tag">{{ draft.category or 'General' }}</span>
+          </div>
+          <div class="draft-col status">
+            {{ draft.updated_at.strftime('%Y-%m-%d %H:%M') }}
+          </div>
+
+          <div class="draft-col actions">
+            <div class="dropdown custom-dropdown">
+              <button class="action-menu-btn" type="button" data-bs-toggle="dropdown" data-bs-boundary="viewport"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end glass-dropdown shadow-lg">
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('blog.edit_blog', blog_id=draft.id) }}">
+                    <i class="bi bi-pencil-square icon-gradient"></i> <span>Edit in Editor</span>
+                  </a>
+                </li>
+                <li>
+                  <button class="dropdown-item" onclick="submitForReview('{{ draft.id }}')">
+                    <i class="bi bi-send-check icon-gradient"></i> <span>Submit for Approval</span>
+                  </button>
+                </li>
+                <li class="dropdown-divider-glass"></li>
+                <li>
+                  <button class="dropdown-item text-danger-glass" onclick="deleteDraft('{{ draft.id }}')">
+                    <i class="bi bi-x-circle"></i> <span>Delete Permanently</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        {%else%}
+        <div class="p-5 text-center text-muted">
+          <i class="bi bi-inbox fs-1"></i>
+          <p>No blogs currently in drafts</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  async function submitForReview(id) {
+    if (!confirm("Send this draft for admin approval?")) return;
+    
+    try {
+      const res = await fetch(`/api/submit_for_review/${id}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        // Nice fade-out effect instead of a hard reload
+        const row = document.getElementById(`row-${id}`);
+        row.style.opacity = '0';
+        row.style.transform = 'translateX(20px)';
+        setTimeout(() => row.remove(), 300);
+        
+        // Update the 'Drafts' count in the sidebar/header if needed
+      }
+    } catch (err) {
+      alert("Error submitting for review.");
+    }
+  }
+
+  async function deleteDraft(id) {
+    if (!confirm("This will permanently delete the blog. Continue?")) return;
+    
+    try {
+      const res = await fetch(`/api/delete_blog/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        const row = document.getElementById(`row-${id}`);
+        row.style.opacity = '0';
+        row.style.background = '#fee2e2'; // Light red flash before removal
+        setTimeout(() => row.remove(), 300);
+      }
+    } catch (err) {
+      alert("Error deleting draft.");
+    }
+  }
+</script>
+{% endblock %}

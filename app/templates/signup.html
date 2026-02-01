@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup | ScriptlyAI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-right">
+        <div class="auth-card">
+            <h2>Signup</h2>
+            <form>
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" class="primary-btn">Create Account</button>
+            </form>
+
+            <div class="divider">OR</div>
+
+            <button id="googleSignUp" class="google-outline-btn">
+                <i class="bi bi-google"></i>
+                Continue with Google
+            </button>
+
+            <p class="auth-footer">
+                Already have an account?
+                <a href="{{ url_for('auth_bp.login') }}">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <div class="auth-left">
+        <h1>ScriptlyAI</h1>
+        <p>Create your account and unlock AI-powered writing tools.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+<script id="firebase-config" type="application/json">
+    {{ firebase_config | tojson }}
+</script>
+<script src="{{ url_for('static', filename='js/firebase_google.js') }}"></script>
+{% endblock %}

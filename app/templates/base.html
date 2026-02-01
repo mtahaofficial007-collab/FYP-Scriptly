@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Scriptly AI{% endblock %}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        /* Global Loader Styles */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(248, 250, 252, 0.85); /* Light Slate background */
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #page-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .scriptly-logo-loader {
+            font-size: 64px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #d700cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse-loader 1.5s infinite ease-in-out;
+            display: inline-block;
+        }
+
+        @keyframes pulse-loader {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .loader-text {
+            display: block;
+            font-weight: 600;
+            margin-top: 12px;
+            color: #1e293b;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div id="page-loader">
+        <div class="loader-content">
+            <div class="scriptly-logo-loader">S</div>
+            <span class="loader-text">ScriptlyAI</span>
+        </div>
+    </div>
+
+    <div class="app-wrapper">
+        <main class="p-0"> {% block content %}{% endblock %}
+        </main>
+    </div>
+    <!-- Hello -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <script>
+        const pageLoader = document.getElementById("page-loader");
+
+        // Global Helper Functions
+        window.showLoader = () => pageLoader.classList.remove("hidden");
+        window.hideLoader = () => pageLoader.classList.add("hidden");
+
+        // 1. Initial Page Load: Hide loader when everything is ready
+        window.addEventListener("load", () => {
+            setTimeout(window.hideLoader, 300);
+        });
+
+        // 2. Navigation: Show loader when clicking valid links
+        document.addEventListener("click", (e) => {
+            const link = e.target.closest("a");
+            if (
+                link && 
+                link.href && 
+                !link.href.includes("#") && 
+                link.target !== "_blank" &&
+                !e.ctrlKey && !e.metaKey &&
+                !link.hasAttribute('data-bs-toggle') // Ignore bootstrap toggles (dropdowns/modals)
+            ) {
+                window.showLoader();
+            }
+        });
+
+        // 3. Forms: Show loader on submission (Login, Register, Save)
+        document.addEventListener("submit", (e) => {
+            if (!e.target.classList.contains('no-loader')) {
+                window.showLoader();
+            }
+        });
+
+        // 4. Back/Forward Cache: Hide loader if user hits "Back" button
+        window.addEventListener("pageshow", (event) => {
+            if (event.persisted) {
+                window.hideLoader();
+            }
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

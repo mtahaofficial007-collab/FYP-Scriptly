@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Approval | ScriptlyAI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/drafts.css') }}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+  .action-menu {
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 50%;
+  }
+
+  .action-menu:hover {
+    background: #f0f0f0;
+  }
+
+  /* Ensure the action column doesn't clip the menu */
+  .draft-col.actions {
+    overflow: visible !important;
+    position: relative;
+  }
+
+  /* Three dots button styling */
+  .action-menu-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    color: #64748b;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .action-menu-btn:hover {
+    background: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+  }
+
+  /* The "Modal" style Dropdown Menu */
+  .custom-dropdown .dropdown-menu {
+    z-index: 2000 !important;
+    /* Forces it above sidebar and rows */
+    border-radius: 12px;
+    padding: 8px;
+    min-width: 200px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    animation: fadeInDropdown 0.2s ease-out;
+  }
+
+  .custom-dropdown .dropdown-item {
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    transition: all 0.2s ease;
+  }
+
+  .custom-dropdown .dropdown-item:hover {
+    background-color: #f8fafc;
+    transform: translateX(4px);
+  }
+
+  .custom-dropdown .dropdown-item i {
+    font-size: 16px;
+  }
+
+  /* Simple fade-in animation */
+  @keyframes fadeInDropdown {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+  <nav class="dashboard-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        Scriptly
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      {% set path = request.path %}
+
+      <a href="{{ url_for('blog.home') }}" class="{{ 'active' if path == url_for('blog.home') else '' }}">
+        <i class="bi bi-speedometer2"></i> Home
+      </a>
+      <a href="{{ url_for('blog.create_page') }}" class="{{ 'active' if path == url_for('blog.create_page') else '' }}">
+        <i class="bi bi-plus-circle"></i> Create Blog
+      </a>
+      <a href="{{ url_for('blog.drafts_page') }}" class="{{ 'active' if path == url_for('blog.drafts_page') else '' }}">
+        <i class="bi bi-file-earmark-richtext"></i> My Drafts
+      </a>
+      <a href="{{ url_for('blog.categories_page') }}"
+        class="{{ 'active' if path == url_for('blog.categories_page') else '' }}">
+        <i class="bi bi-tags"></i> Categories
+      </a>
+      <a href="{{ url_for('blog.approval_page') }}"
+        class="{{ 'active' if path == url_for('blog.approval_page') else '' }}">
+        <i class="bi bi-shield-check"></i> Admin Approval
+      </a>
+      <a href="/users" class="{{ 'active' if path == '/users' else '' }}">
+        <i class="bi bi-people-fill"></i> User Management
+      </a>
+
+      <a href="{{url_for('auth_bp.logout')}}" class="logout mt-auto">
+        <i class="bi bi-box-arrow-right"></i> Logout
+      </a>
+    </div>
+
+    <div class="sidebar-footer text-center">
+      <span>User ID</span>
+      <small>{{ session.get('user_id', 'N/A') }}</small>
+    </div>
+  </nav>
+  <main class="dashboard-main">
+    <header class="dashboard-header">
+      <h1>Pending Approvals</h1>
+    </header>
+
+    <div class="drafts-content-wrapper">
+      <div class="drafts-list-wrapper">
+        <div class="drafts-header">
+          <div class="draft-col title">Title</div>
+          <div class="draft-col tags">Category</div>
+          <div class="draft-col status">Submitted On</div>
+          <div class="draft-col actions">Actions</div>
+        </div>
+
+        {% for blog in pending_blogs %}
+        <div class="draft-row" id="row-{{ blog.id }}">
+          <div class="draft-col title">
+            {{ blog.title.replace('**', '') if blog.title else 'Untitled' }}
+          </div>
+          <div class="draft-col tags">
+            <span class="badge-tag">{{ blog.category or 'General' }}</span>
+          </div>
+          <div class="draft-col status">
+            {{ blog.updated_at.strftime('%Y-%m-%d %H:%M') if blog.updated_at }}
+          </div>
+
+          <div class="draft-col actions">
+            <div class="dropdown custom-dropdown">
+              <button class="action-menu-btn" type="button" data-bs-toggle="dropdown" data-bs-boundary="viewport"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end glass-dropdown shadow-lg">
+                <li>
+                  <a class="dropdown-item" href="{{ url_for('blog.edit_blog', blog_id=blog.id) }}">
+                    <i class="bi bi-eye icon-gradient"></i> <span>Review Content</span>
+                  </a>
+                </li>
+                <li>
+                  <button class="dropdown-item" onclick="approveBlog('{{ blog.id }}')">
+                    <i class="bi bi-check-circle icon-gradient-success"></i> <span>Approve & Publish</span>
+                  </button>
+                </li>
+                <li class="dropdown-divider-glass"></li>
+                <li>
+                  <button class="dropdown-item text-danger-glass" onclick="rejectToDraft('{{ blog.id }}')">
+                    <i class="bi bi-x-circle"></i> <span>Reject to Draft</span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="p-5 text-center text-muted">
+          <i class="bi bi-inbox fs-1"></i>
+          <p>No blogs currently pending approval.</p>
+        </div>
+        {% endfor %}
+
+        {% if total_pages > 1 %}
+        <div class="pagination-container">
+          {% if has_prev %}
+          <a href="{{ url_for('blog.approval_page', page=current_page-1) }}" class="btn-page">Previous</a>
+          {% endif %}
+          <span class="page-info">Page {{ current_page }} of {{ total_pages }}</span>
+          {% if has_next %}
+          <a href="{{ url_for('blog.approval_page', page=current_page+1) }}" class="btn-page">Next</a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  async function approveBlog(id) {
+    if (!confirm("Approve and publish this blog?")) return;
+    const res = await fetch(`/api/approve/${id}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      alert("Blog Published!");
+      document.getElementById(`row-${id}`).remove();
+    }
+  }
+
+  async function rejectToDraft(id) {
+    if (!confirm("Reject this blog back to drafts?")) return;
+    // We can reuse the update status API to set it back to DRAFT
+    const res = await fetch(`/api/update_status/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'DRAFT' })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert("Rejected back to drafts.");
+      document.getElementById(`row-${id}`).remove();
+    }
+  }
+</script>
+{% endblock %}
